@@ -7,6 +7,8 @@ Credits go to https://bombeck.io/projects/bastard-operator-from-hell-generator
 
 ## Usage
 
+Library built upon .NET 8
+
 ```csharp
 using Very_Useful_Reasons;
 
