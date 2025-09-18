@@ -4,7 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>meme.jpg</ApplicationIcon>
     <Title>Very useful reasons</Title>
     <PackageIcon>meme.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/jk-atbas/Very_Useful_Reasons</RepositoryUrl>
@@ -16,6 +15,9 @@
     <Description>Very useful reasons why something doesn't work</Description>
     <Company>ATBAS GmbH &amp; Co. KG</Company>
     <Authors>jk-atbas</Authors>
+	
+	<!--Generate packages.lock.json-->
+	<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>

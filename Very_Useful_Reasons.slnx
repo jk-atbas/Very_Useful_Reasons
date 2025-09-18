@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/lib/Very_Useful_Reasons.csproj" />
+  <Project Path="src/test/Very_Useful_Reasons_Test.csproj" />
+</Solution>
