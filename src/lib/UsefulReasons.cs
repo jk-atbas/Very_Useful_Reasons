@@ -7,8 +7,8 @@ public static class UsefulReasons
 {
 	private const string Url = "https://bofh-api.bombeck.io/v1/excuses/all";
 
-	private static ImmutableArray<Response> reasons = [];
-	private static readonly SemaphoreSlim Gate = new(1, 1);
+	private static ImmutableArray<Reason> reasons = [];
+	private static readonly SemaphoreSlim SemaphoreSlim = new(1, 1);
 	private static readonly HttpClient Client = new()
 	{
 		Timeout = TimeSpan.FromSeconds(30),
@@ -46,20 +46,28 @@ public static class UsefulReasons
 			return;
 		}
 
-		await Gate.WaitAsync(cancellationToken);
-
-		if (reasons.IsDefaultOrEmpty)
+		try
 		{
-			ImmutableArray<Response> loaded = await FetchAllReasons(cancellationToken);
+			await SemaphoreSlim.WaitAsync(cancellationToken);
 
-			if (!loaded.IsDefault)
+			if (reasons.IsDefaultOrEmpty)
 			{
-				reasons = loaded;
+				ImmutableArray<Reason> loaded = await FetchAllReasons(cancellationToken);
+
+				if (!loaded.IsDefault)
+				{
+					reasons = loaded;
+				}
 			}
+
+		}
+		finally
+		{
+			SemaphoreSlim.Release();
 		}
 	}
 
-	private static async Task<ImmutableArray<Response>> FetchAllReasons(CancellationToken cancellationToken)
+	private static async Task<ImmutableArray<Reason>> FetchAllReasons(CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -68,14 +76,19 @@ public static class UsefulReasons
 
 			await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
-			Response[]? data = await JsonSerializer.DeserializeAsync<Response[]>(
+			RawResponse[]? data = await JsonSerializer.DeserializeAsync<RawResponse[]>(
 				stream,
 				serializerOptions,
 				cancellationToken);
 
-			return data is { Length: > 0 }
-				? ImmutableArray.Create(data)
-				: [];
+			if (data?.Length <= 0)
+			{
+				return [];
+			}
+
+			ImmutableArray<Reason>? reasons = data?.Select(Reason.TryMap).OfType<Reason>().ToImmutableArray();
+
+			return reasons ?? [];
 		}
 		catch (Exception)
 		{
