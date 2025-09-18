@@ -1,0 +1,6 @@
+# Very useful reasons
+
+Uses the
+endpoint https://bofh-api.bombeck.io/v1/excuses/all.
+
+Credits go to https://bombeck.io/projects/bastard-operator-from-hell-generator 
