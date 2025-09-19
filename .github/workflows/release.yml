@@ -50,6 +50,9 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: mcr.microsoft.com/dotnet/sdk:9.0
+    permissions: 
+      packages: write
+      contents: write
     needs: [build, test]
     if: github.event_name == 'push' || inputs.create-release == true
     steps:
@@ -72,4 +75,17 @@ jobs:
         run: |
           echo "Package name: ${{steps.package-info.outputs.package-name}}"
           echo "Package version: ${{steps.version.outputs.SemVer2}}"
+      - name: Add nuget package source
+        run: |
+          dotnet nuget add source --username jk-atbas --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/jk-atbas/index.json"
+      - name: Publish package to nuget registry
+        run: dotnet nuget push ./src/lib/bin/Release/*.nupkg --api-key "${{ secrets.GITHUB_TOKEN }}" --source github
+      - name: Create Release
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          skipIfReleaseExists: true
+          name: ${{ steps.package-info.outputs.package-name }}_${{ steps.version.outputs.SemVer2 }}
+          generateReleaseNotes: true
+          replacesArtifacts: false
+
           
