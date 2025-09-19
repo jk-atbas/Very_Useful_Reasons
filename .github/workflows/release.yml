@@ -87,5 +87,6 @@ jobs:
           name: ${{ steps.package-info.outputs.package-name }}_${{ steps.version.outputs.SemVer2 }}
           generateReleaseNotes: true
           replacesArtifacts: false
+          tag: ${{ steps.version.outputs.SemVer2 }}
 
           
