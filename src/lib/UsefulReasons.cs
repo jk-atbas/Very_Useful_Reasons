@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System.Collections.Immutable;
 using System.Text.Json;
 
@@ -24,9 +25,9 @@ public static class UsefulReasons
 		Client.DefaultRequestHeaders.UserAgent.ParseAdd($"Useful_Reasons_Library_{Environment.Version}");
 	}
 
-	public static async Task<string> GetReason(CancellationToken cancellationToken = default)
+	public static async Task<string> GetReason(ILogger? logger = null, CancellationToken cancellationToken = default)
 	{
-		await EnsureReasonsLoaded(cancellationToken);
+		await EnsureReasonsLoaded(logger, cancellationToken);
 
 		if (reasons.IsDefaultOrEmpty)
 		{
@@ -39,7 +40,7 @@ public static class UsefulReasons
 		return string.IsNullOrWhiteSpace(quote) ? string.Empty : quote;
 	}
 
-	private static async Task EnsureReasonsLoaded(CancellationToken cancellationToken)
+	private static async Task EnsureReasonsLoaded(ILogger? logger, CancellationToken cancellationToken)
 	{
 		if (!reasons.IsDefaultOrEmpty)
 		{
@@ -52,7 +53,7 @@ public static class UsefulReasons
 
 			if (reasons.IsDefaultOrEmpty)
 			{
-				ImmutableArray<Reason> loaded = await FetchAllReasons(cancellationToken);
+				ImmutableArray<Reason> loaded = await FetchAllReasons(logger, cancellationToken);
 
 				if (!loaded.IsDefault)
 				{
@@ -67,7 +68,9 @@ public static class UsefulReasons
 		}
 	}
 
-	private static async Task<ImmutableArray<Reason>> FetchAllReasons(CancellationToken cancellationToken)
+	private static async Task<ImmutableArray<Reason>> FetchAllReasons(
+		ILogger? logger,
+		CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -90,8 +93,10 @@ public static class UsefulReasons
 
 			return reasons ?? [];
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
+			logger?.LogError(e, "{message}", e.Message);
+
 			return [];
 		}
 	}
