@@ -76,7 +76,7 @@ jobs:
         run: | 
           REPO_NAME=${GITHUB_REPOSITORY##*/}
           CURRENT_DATE=$(date +'%d-%m-%Y_%H-%M-%S')
-          echo package-name=$REPO_NAME_$CURRENT_DATE >> $GITHUB_OUTPUT
+          echo "package-name=$REPO_NAME_$CURRENT_DATE" >> $GITHUB_OUTPUT
       - name: Give information
         run: |
           echo "Package name: ${{steps.package-info.outputs.package-name}}"
