@@ -95,6 +95,7 @@ public static class UsefulReasons
 		}
 		catch (Exception e)
 		{
+			logger?.LogWarning(e, "Something went wrong!");
 			logger?.LogError(e, "{message}", e.Message);
 
 			return [];
