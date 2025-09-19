@@ -1,0 +1,81 @@
+name: Release pipeline on main
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      create-release:
+        description: Whether to create and upload a nuget package
+        required: false
+        default: true
+        type: boolean
+
+env:
+  DOTNET_INSTALL_DIR: "~/dotnet"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.x"
+          cache-dependency-path: ./src/lib/packages.lock.json
+          cache: true
+      - name: Build solution
+        run: dotnet build -c Release
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.x"
+          cache-dependency-path: ./src/lib/packages.lock.json
+          cache: true
+      - name: Run tests
+        run: dotnet test
+
+  release: 
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: inputs.create-release == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+            fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "8.x"
+          cache-dependency-path: ./src/lib/packages.lock.json
+          cache: true
+      - name: Use Nerdbank.GitVersioning
+        uses: dotnet/nbgv@v0.4.2
+        id: version
+      - name: Build and Pack
+        run: dotnet pack ./src/lib/*.csproj -c Release
+      - name: Create Package name
+        id: package-info
+        run: | 
+          REPO_NAME=${GITHUB_REPOSITORY##*/}
+          CURRENT_DATE=$(date +'%d-%m-%Y_%H-%M-%S')
+          echo package-name=$REPO_NAME_$CURRENT_DATE >> $GITHUB_OUTPUT
+      - name: Give information
+        run: |
+          echo "Package name: ${{steps.package-info.outputs.package-name}}"
+          echo "Package version: ${{steps.version.outputs.SemVer2}}"
+
+          
