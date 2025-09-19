@@ -17,38 +17,39 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: 
+      image: mcr.microsoft.com/dotnet/sdk:9.0
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "9.x"
-          cache-dependency-path: ./src/lib/packages.lock.json
-          cache: true
+      # not needed when container is used
+      # - name: Setup .NET
+      #   uses: actions/setup-dotnet@v5
+      #   with:
+      #     dotnet-version: "9.x"
+      #     cache-dependency-path: ./src/lib/packages.lock.json
+      #     cache: true
       - name: Build solution
         run: dotnet build ./*.slnx -c Release
 
   test:
     runs-on: ubuntu-latest
+    container: 
+      image: mcr.microsoft.com/dotnet/sdk:9.0
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "9.x"
-          cache-dependency-path: ./src/lib/packages.lock.json
-          cache: true
       - name: Run tests
         run: dotnet test ./*.slnx
 
   release: 
     runs-on: ubuntu-latest
+    container: 
+      image: mcr.microsoft.com/dotnet/sdk:9.0
     needs: [build, test]
     if: github.event_name == 'push' || inputs.create-release == true
     steps:
@@ -56,12 +57,6 @@ jobs:
         uses: actions/checkout@v5
         with:
             fetch-depth: 0
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: "9.x"
-          cache-dependency-path: ./src/lib/packages.lock.json
-          cache: true
       - name: Use Nerdbank.GitVersioning
         uses: dotnet/nbgv@v0.4.2
         id: version
