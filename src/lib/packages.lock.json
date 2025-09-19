@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net8.0": {
+    "net9.0": {
       "Nerdbank.GitVersioning": {
         "type": "Direct",
         "requested": "[3.7.115, )",
