@@ -28,6 +28,10 @@ jobs:
           dotnet-version: "8.x"
           cache-dependency-path: ./src/lib/packages.lock.json
           cache: true
+      - name: Return current dir
+        run: |
+          echo $(pwd)
+          ls
       - name: Build solution
         run: dotnet build -c Release
 
