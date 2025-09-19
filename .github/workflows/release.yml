@@ -25,7 +25,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: "8.x"
+          dotnet-version: "9.x"
           cache-dependency-path: ./src/lib/packages.lock.json
           cache: true
       - name: Return current dir
@@ -45,7 +45,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: "8.x"
+          dotnet-version: "9.x"
           cache-dependency-path: ./src/lib/packages.lock.json
           cache: true
       - name: Run tests
@@ -63,7 +63,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: "8.x"
+          dotnet-version: "9.x"
           cache-dependency-path: ./src/lib/packages.lock.json
           cache: true
       - name: Use Nerdbank.GitVersioning
