@@ -28,10 +28,6 @@ jobs:
           dotnet-version: "9.x"
           cache-dependency-path: ./src/lib/packages.lock.json
           cache: true
-      - name: Return current dir
-        run: |
-          echo $(pwd)
-          ls
       - name: Build solution
         run: dotnet build ./*.slnx -c Release
 
@@ -77,6 +73,8 @@ jobs:
           REPO_NAME=${GITHUB_REPOSITORY##*/}
           CURRENT_DATE=$(date +'%d-%m-%Y_%H-%M-%S')
           echo "package-name=$REPO_NAME_$CURRENT_DATE" >> $GITHUB_OUTPUT
+          echo "Package-name: $package-name"
+          echo "Repo-name: $REPO_NAME"
       - name: Give information
         run: |
           echo "Package name: ${{steps.package-info.outputs.package-name}}"
