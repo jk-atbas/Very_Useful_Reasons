@@ -4,9 +4,14 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DebugType>embedded</DebugType>
+
+    <!-- Generate docs for xml Documentation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Package relevant settings -->
     <Title>Very useful reasons</Title>
     <PackageIcon>meme.jpg</PackageIcon>
-    <RepositoryUrl>https://github.com/jk-atbas/Very_Useful_Reasons</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>bullshit; meme</PackageTags>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
@@ -16,8 +21,16 @@
     <Company>ATBAS GmbH &amp; Co. KG</Company>
     <Authors>jk-atbas</Authors>
 	
-	<!--Generate packages.lock.json-->
-	<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Generate packages.lock.json -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <!-- When built through github actions then use official release/build settings -->
+  <!-- see https://learn.microsoft.com/de-de/dotnet/core/project-sdk/msbuild-props#continuousintegrationbuild -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +54,10 @@
 	
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
