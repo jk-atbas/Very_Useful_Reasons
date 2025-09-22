@@ -25,6 +25,12 @@ public static class UsefulReasons
 		Client.DefaultRequestHeaders.UserAgent.ParseAdd($"Useful_Reasons_Library_{Environment.Version}");
 	}
 
+	/// <summary>
+	/// Returns a random silly error reason
+	/// </summary>
+	/// <param name="logger">Optional logger</param>
+	/// <param name="cancellationToken">Cancellation token</param>
+	/// <returns>The requested error reason</returns>
 	public static async Task<string> GetReason(ILogger? logger = null, CancellationToken cancellationToken = default)
 	{
 		await EnsureReasonsLoaded(logger, cancellationToken);
