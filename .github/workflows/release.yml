@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       # not needed when container is used
       # - name: Setup .NET
       #   uses: actions/setup-dotnet@v5
@@ -39,6 +41,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - name: Run tests
         run: dotnet test ./*.slnx
 
