@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace Very_Useful_Reasons;
 
+/// <summary>
+/// Why not some useful reasons?
+/// </summary>
 public static class UsefulReasons
 {
 	private const string Url = "https://bofh-api.bombeck.io/v1/excuses/all";
