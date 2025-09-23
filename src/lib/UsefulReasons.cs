@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace Very_Useful_Reasons;
 
 /// <summary>
-/// Why not some useful reasons?
+/// Why not some useful excuses?
 /// </summary>
 public static class UsefulReasons
 {
