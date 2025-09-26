@@ -1,0 +1,17 @@
+<Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+  <Target Name="CustomAfterBuildTarget" AfterTargets="Build">
+      <Message Text="Hello from CustomAfterBuildTarget" Importance="high" />
+  </Target>
+  <PropertyGroup>
+    <ForcePackageVersion Condition="'$(ForcePackageVersion)' != ''">$(ForcePackageVersion)</ForcePackageVersion>
+  </PropertyGroup>
+
+  <Target Name="ForceNupkgVersion" AfterTargets="GetBuildVersion" Condition="'$(ForcePackageVersion)' != ''">
+    <PropertyGroup>
+      <Version>$(ForcePackageVersion)</Version>
+      <PackageVersion>$(ForcePackageVersion)</PackageVersion>
+      <AssemblyInformationalVersion>$(ForcePackageVersion)</AssemblyInformationalVersion>
+    </PropertyGroup>
+  </Target>
+</Project>
