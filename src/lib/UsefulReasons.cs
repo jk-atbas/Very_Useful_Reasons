@@ -77,6 +77,12 @@ public static class UsefulReasons
 		}
 	}
 
+	/// <summary>
+	/// Fteches all reasons from the api
+	/// </summary>
+	/// <param name="logger">Logging option</param>
+	/// <param name="cancellationToken">Cancellation token</param>
+	/// <returns>The array of reasons</returns>
 	private static async Task<ImmutableArray<Reason>> FetchAllReasons(
 		ILogger? logger,
 		CancellationToken cancellationToken)
