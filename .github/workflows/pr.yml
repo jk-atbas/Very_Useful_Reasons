@@ -57,7 +57,7 @@ jobs:
       - name: Calculate Pre-release Suffix
         id: suffix
         run: |
-          PR_NUMBER=$(echo $GITHUB_REF_NAME | cut-d'/' -f1)
+          PR_NUMBER=$(echo $GITHUB_REF_NAME | cut -d'/' -f1)
           echo "PR-Number: $PR_NUMBER"
           echo "PR Run-Attempt: $GITHUB_RUN_ATTEMPT"
           echo "suffix=rc-${PR_NUMBER}-${GITHUB_RUN_ATTEMPT}"
