@@ -51,7 +51,7 @@ jobs:
           fetch-depth: 0
       - name: Setup Nerdbank.GitVersioning
         uses: dotnet/nbgv@v0.4.2
-        id: version
+        id: nbgv
       - name: Test output for secret
         run: echo $Nuget_Test_Pat
       - name: Calculate Pre-release Suffix
@@ -59,15 +59,21 @@ jobs:
         run: |
           PR_NUMBER=$(echo $GITHUB_REF_NAME | cut -d'/' -f1)
           echo "PR-Number: $PR_NUMBER"
-          echo "PR Run-Attempt: $GITHUB_RUN_ATTEMPT"
-          echo "suffix=rc-${PR_NUMBER}-${GITHUB_RUN_ATTEMPT}" >> $GITHUB_OUTPUT
-      - name: Output Pre-release Suffix
-        run: echo "Suffix=${{ steps.suffix.outputs.suffix }}"
+          echo "PR Run-Number: $GITHUB_RUN_NUMBER"
+          echo "suffix=rc-pr-${PR_NUMBER}-${GITHUB_RUN_NUMBER}" >> $GITHUB_OUTPUT
+      - name: Output Pre-release version info
+        id: version
+        run: | 
+          echo "Suffix=${{ steps.suffix.outputs.suffix }}"
+          FULLVERSION="${{ steps.nbgv.outputs.SimpleVersion }}-${{ steps.suffix.outputs.suffix }}"
+          echo "Fullversion= ${FULLVERSION}"
+          echo "full-version=${FULLVERSION}" >> $GITHUB_OUTPUT
       # - name: Pack and Bundle package
       #   run: |
-      #     dotnet pack ./src/lib/*.csproj -c Release /p:NBGV_Prerelease=${{ steps.suffix.outputs.suffix }} --version-suffix ${{ steps.suffix.outputs.suffix }}
+      #     dotnet pack ./src/lib/*.csproj -c Release /p:ForcePackageVersion=${{ steps.version.outputs.full-version }}
       # - name: Add nuget package source
       #   run: |
       #     dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/jk-atbas/index.json"
       # - name: Push to nuget registry
+      #   if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
       #   run: dotnet nuget push ./src/lib/bin/Release/*.nupkg --api-key "${{ secrets.GITHUB_TOKEN }}" --source github --skip-duplicate
