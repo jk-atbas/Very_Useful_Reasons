@@ -49,6 +49,12 @@ public static class UsefulReasons
 		return string.IsNullOrWhiteSpace(quote) ? string.Empty : quote;
 	}
 
+	/// <summary>
+	/// Ensure reasons are available
+	/// </summary>
+	/// <param name="logger">Logging option</param>
+	/// <param name="cancellationToken">Cancellation token</param>
+	/// <returns>A task</returns>
 	private static async Task EnsureReasonsLoaded(ILogger? logger, CancellationToken cancellationToken)
 	{
 		if (!reasons.IsDefaultOrEmpty)
