@@ -1,0 +1,28 @@
+name: Tests the delete_github_packages_with_name action
+on: 
+  workflow_dispatch: 
+    inputs:
+      filter:
+        description: What versions to glob match
+        required: true
+        type: string
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    permissions: 
+      packages: admin
+    steps:
+      - name: Set Repo name
+        id: repo
+        run: |
+          REPO_NAME=${GITHUB_REPOSITORY##*/}
+          echo "Repo name= ${REPO_NAME}"
+          echo "repo-name=${REPO_NAME}" >> $GITHUB_OUTPUT
+      - name: Executes the custom docker action
+        uses: jk-atbas/delete_github_packages_with_name@main
+        with:
+          GITHUB_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: jk-atbas
+          PACKAGE_NAME: ${{ steps.repo.outputs.repo-name }}
+          VERSION_FILTER: ${{ inputs.filter }}
