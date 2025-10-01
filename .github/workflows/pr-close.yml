@@ -1,0 +1,25 @@
+name: Deletes all pre releases for a closed pr
+on:
+  pull_request:
+    types: 
+      - closed
+
+jobs:
+  delete-pre-releases:
+    runs-on: ubuntu-latest
+    permissions: 
+      packages: write
+    steps:
+      - name: Set pr number
+        id: pr
+        run: |
+          REPO_NAME=${GITHUB_REPOSITORY##*/}
+          echo "PR-Number: ${{ github.event.pull_request.number }}"
+          echo "repo-name=${REPO_NAME}" >> $GITHUB_OUTPUT
+      - name: Invoke Delete Github Packages Action
+        uses: jk-atbas/delete_github_packages_with_name@main
+        with:
+          GITHUB_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+          PACKAGE_NAME: ${{ steps.pr.outputs.repo-name }}
+          VERSION_FILTER: "*pr-${{ github.event.pull_request.number }}*"
