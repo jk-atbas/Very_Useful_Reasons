@@ -57,7 +57,7 @@ jobs:
       - name: Calculate Pre-release Suffix
         id: suffix
         run: |
-          PR_NUMBER=$(echo $GITHUB_REF_NAME | cut -d'/' -f1)
+          PR_NUMBER="${{ github.event.pull_request.number }}"
           echo "PR-Number: $PR_NUMBER"
           echo "PR Run-Number: $GITHUB_RUN_NUMBER"
           echo "suffix=rc-pr-${PR_NUMBER}-${GITHUB_RUN_NUMBER}" >> $GITHUB_OUTPUT
