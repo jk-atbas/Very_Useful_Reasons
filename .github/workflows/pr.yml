@@ -68,12 +68,12 @@ jobs:
           FULLVERSION="${{ steps.nbgv.outputs.SimpleVersion }}-${{ steps.suffix.outputs.suffix }}"
           echo "Fullversion= ${FULLVERSION}"
           echo "full-version=${FULLVERSION}" >> $GITHUB_OUTPUT
-      # - name: Pack and Bundle package
-      #   run: |
-      #     dotnet pack ./src/lib/*.csproj -c Release /p:PublicRelease=true /p:ForcePackageVersion=${{ steps.version.outputs.full-version }}
-      # - name: Add nuget package source
-      #   run: |
-      #     dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/jk-atbas/index.json"
-      # - name: Push to nuget registry
-      #   if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-      #   run: dotnet nuget push ./src/lib/bin/Release/*.nupkg --api-key "${{ secrets.GITHUB_TOKEN }}" --source github --skip-duplicate
+      - name: Pack and Bundle package
+        run: |
+          dotnet pack ./src/lib/*.csproj -c Release /p:PublicRelease=true /p:ForcePackageVersion=${{ steps.version.outputs.full-version }}
+      - name: Add nuget package source
+        run: |
+          dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password "${{ secrets.GITHUB_TOKEN }}" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/jk-atbas/index.json"
+      - name: Push to nuget registry
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: dotnet nuget push ./src/lib/bin/Release/*.nupkg --api-key "${{ secrets.GITHUB_TOKEN }}" --source github --skip-duplicate
