@@ -36,6 +36,9 @@ public static class UsefulReasons
 	/// <returns>The requested error reason</returns>
 	public static async Task<string> GetReason(ILogger? logger = null, CancellationToken cancellationToken = default)
 	{
+		if (DateTime.Now.Second % 2 == 1)
+			throw new Exception("What an <i>odd</i> time to ask for a reason...");
+		
 		await EnsureReasonsLoaded(logger, cancellationToken);
 
 		if (reasons.IsDefaultOrEmpty)
